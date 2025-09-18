@@ -8,7 +8,7 @@ senha = os.environ.get("PASSWORD")
 
 if not senha:
     # Fallback para execução local
-    senha = input("MINHASENHA")
+    senha = "MINHASENHA"
 
 SenhaFornecida = senha
 

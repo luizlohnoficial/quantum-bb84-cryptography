@@ -2,6 +2,7 @@
 import qsharp
 import random
 
+
 from CriptBB84 import KeyBB84,  RandomBit
 
 
