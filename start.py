@@ -10,7 +10,7 @@ if not senha:
     # Fallback para execução local
     senha = "MINHASENHA"
 
-SenhaFornecida = senha
+SenhaFornecida = "MINHASENHA"
 
 # NÃO imprimir a senha em texto puro em logs se for sensível
 print("Mensagem recebida (comprimento):", len(SenhaFornecida))
