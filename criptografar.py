@@ -1,61 +1,75 @@
-"""Rotinas de criptografia usando chaves geradas pelo protocolo BB84."""
-
+# Importando bibliotecas necessárias
+import qsharp
 import random
 
-
-try:
-    import qsharp  # noqa: F401
-    from CriptBB84 import KeyBB84, RandomBit
-    QSHARP_AVAILABLE = True
-except Exception:  # pragma: no cover - only executed when qsharp missing
-    QSHARP_AVAILABLE = False
-    KeyBB84 = None  # type: ignore[assignment]
-    RandomBit = None  # type: ignore[assignment]
+from CriptBB84 import KeyBB84,  RandomBit
 
 
-def generate_random_bits(n):
-    """Retorna uma lista de ``n`` bits aleatórios (0 ou 1)."""
-    return [random.randint(0, 1) for _ in range(n)]
+def GenerateRandonBits(n):
+    vetor = []
+    for i in range(n):
+        vetor.append(random.randint(0, 1))
+    return vetor
 
-def qubits_random_bits(n):
-    """Gera ``n`` bits aleatórios utilizando a operação ``RandomBit`` em Q#."""
-    if not QSHARP_AVAILABLE:
-        raise ImportError("qsharp não está disponível")
-    return [RandomBit.simulate() for _ in range(n)]
 
-def gera_chave_compartilhada():
-    """Executa o protocolo BB84 até gerar ao menos 8 bits de chave."""
-    if not QSHARP_AVAILABLE:
-        raise ImportError("qsharp não está disponível")
-    key = []
-    while len(key) <= 8:
-        tam = 16
-        user_origen = qubits_random_bits(tam)
-        user_origen_base = qubits_random_bits(tam)
-        user_destino_base = qubits_random_bits(tam)
+# Retorna vetor de n bits aleatórios com Q#
+# range: retorna uma sequência de números *
+# simulate irá simular a execução da função GenerateRandonBits
+def QubitsRandonBits(n):
+    vetor = []
+    for i in range(n):
+        vetor.append(RandomBit.simulate())
+    return vetor
+
+
+def GeraChaveCompartilhada():
+    key = []  # vetor inicial
+    while len(key) <= 8:  # necessário 8 bits para representar qualquer valor da ASCII
+        # numero n de bits/qubits que serão utilizados
+        tam = 16  # Cria vetores de bits de tamanho n aleatórios
+        # Origien gera n bits aleatórios de mensagem
+        UserOrigen = QubitsRandonBits(tam)
+        # Usuário Origen gera uma base de bits aleatórios onde serão aplicados a H
+        UserOrigenBase = QubitsRandonBits(tam)
+        # Usuário Destino  gera uma base de bits aleatórios onde serão aplicados a H
+        UserDestinoBase = QubitsRandonBits(tam)
+        # Faz a simulação com as bases aleatórias definidas e cria uma chave compartilhada
+
+        print(f"UserOrigen     : {UserOrigen}")
+        print(f"UserOrigenBase : {UserOrigenBase}")
+        print(f"UserDestinoBase: {UserDestinoBase}")
 
         key = KeyBB84.simulate(
-            AliceBits=user_origen,
-            AliceBase=user_origen_base,
-            BobBase=user_destino_base,
-            n=tam,
-        )
+            AliceBits=UserOrigen, AliceBase=UserOrigenBase, BobBase=UserDestinoBase, n=tam)
+        print(f"key sendo unida: {key}")
 
-    return "".join(str(bit) for bit in key)
-
-
-def criptografa_caracter(c: str, key: str) -> str:
-    """Criptografa um único caractere usando a chave binária fornecida."""
-    valor = (ord(c) + int(key, 2)) % 255
-    return bin(valor)
+    # converte a lista de inteiros para uma string binária
+    for i in range(len(key)):
+        key[i] = str(key[i])
+    key = "".join(key)
+    print(f"key apenas converter lista: {key}")
+    return key
 
 
-def criptografa_mensagem(texto: str):
-    """Criptografa cada caractere da mensagem utilizando uma chave única."""
-    msg_cript = []
-    keys = []
-    for char in texto:
-        key = gera_chave_compartilhada()
-        keys.append(key)
-        msg_cript.append(criptografa_caracter(char, key))
-    return msg_cript, keys
+def CriptografaCaracter(c, key):
+    print(f"C ORD: {ord(c)}")
+    print(f"int(key, 2)) % 255: {int(key, 2) % 255}")
+
+    c = (ord(c) + int(key, 2)) % 255
+    print(f"criptografa caractere: {c}")
+    print(f"bin: {bin(c)}")
+
+    return bin(c)
+
+
+# Usar qualquer método de criptografia de chave única
+def CriptografaMensagem(SenhaFornecida):
+    Msg_Cript = []
+    Keys = []
+    for i in SenhaFornecida:
+        key = GeraChaveCompartilhada()
+        Keys.append(key)
+        Msg_Cript.append(CriptografaCaracter(i, key))
+        print(f"CriptografaMensagemKey: {key}")
+        print(f"CriptografaMensagemMSG: {Msg_Cript}")
+    return (Msg_Cript, Keys)
