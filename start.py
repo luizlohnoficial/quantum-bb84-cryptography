@@ -1,10 +1,18 @@
 # Importando bibliotecas necessárias
-import criptografar
-import descriptografar
+import os
+from criptografar import CriptografaMensagem
+from descriptografar import DescriptografaMensagem
 
+# Tenta ler a senha da variável de ambiente
+senha = os.environ.get("PASSWORD")
 
-SenhaFornecida = list(input("Digite uma palavra para enviar: "))
-print(f"Mensagem: {SenhaFornecida}")
+if not senha:
+    # Fallback para execução local
+    senha = input("Digite uma palavra para enviar: ")
+
+SenhaFornecida = list(senha)
+# NÃO imprimir a senha em texto puro em logs se for sensível
+print("Mensagem recebida (comprimento):", len(SenhaFornecida))
 
 # Criptografa usando OTP para cada caracter
 Msg_Cript, keys = criptografar.CriptografaMensagem(SenhaFornecida)
