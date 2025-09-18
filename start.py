@@ -8,9 +8,10 @@ senha = os.environ.get("PASSWORD")
 
 if not senha:
     # Fallback para execução local
-    senha = input("Digite uma palavra para enviar: ")
+    senha = input("MINHASENHA")
 
-SenhaFornecida = list(senha)
+SenhaFornecida = senha
+
 # NÃO imprimir a senha em texto puro em logs se for sensível
 print("Mensagem recebida (comprimento):", len(SenhaFornecida))
 
