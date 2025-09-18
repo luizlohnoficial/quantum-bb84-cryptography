@@ -14,8 +14,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      PASSWORD: SENHADAPIPELINE
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -28,5 +26,4 @@ jobs:
       - name: Run encryption
         run: |
           set -x
-          echo "Password length: ${#PASSWORD}"
-          python start.py
+          python start.py 
