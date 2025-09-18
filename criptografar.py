@@ -3,7 +3,7 @@ import qsharp
 import random
 
 
-from CriptBB84 import KeyBB84,  RandomBit
+from CriptBB84.qs import KeyBB84,  RandomBit
 
 
 def GenerateRandonBits(n):
