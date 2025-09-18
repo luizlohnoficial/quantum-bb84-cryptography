@@ -1,4 +1,4 @@
-namespace CriptBB84 {
+namespace CriptBB84{
     open Microsoft.Quantum.Intrinsic;
     open Microsoft.Quantum.Convert;
     open Microsoft.Quantum.Measurement;
